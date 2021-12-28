@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Data in Local Storage</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+
+    <link href="https://fonts.googleapis.com/css2?family=KoHo:wght@200;300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+</head>
+
+<body>
+
+    <div class="main">
+
+        <div class="leftSide">
+
+            <h1>User Form</h1>
+
+            <input type="text" placeholder="Name" id="username">
+            <input type="text" placeholder="Father Name" id="fname">
+            <input type="text" placeholder="CNIC" id="cnic">
+            <input type="text" placeholder="Phone Number" id="phNumber">
+            <input type="email" placeholder="Email" id="eMail">
+
+            <button type="button" id="submitBtn">Submit</button>
+
+        </div>
+
+        <div class="rightSide">
+
+            <h1 class="searchHeading">User Search</h1>
+
+            <input type="text" placeholder="Search" id="searchBox">
+
+            <button type="button" id="searchBtn">Search</button>
+
+            <button type="button" onclick="clrText()">Clear</button>
+
+            <div class="infoContainer"></div>
+
+        </div>
+
+    </div>
+
+</body>
+
+<script>
+
+    let btn1 = document.getElementById('submitBtn');
+    let btn2 = document.getElementById('searchBtn');
+
+    const submitHandling = () => {
+        var username = document.getElementById('username');
+        var fname = document.getElementById('fname');
+        var cnic = document.getElementById('cnic');
+        var phNumber = document.getElementById('phNumber');
+        var eMail = document.getElementById('eMail');
+
+        username = username.value;
+        fname = fname.value;
+        cnic = cnic.value;
+        phNumber = phNumber.value;
+        eMail = eMail.value;
+
+        let obj = { username, fname, cnic, phNumber, eMail };
+        let insertData = JSON.parse(localStorage.getItem('data'));
+
+        if (!insertData) {
+            localStorage.setItem('data', JSON.stringify([obj]));
+        }
+        else {
+            insertData.push(obj);
+            localStorage.setItem('data', JSON.stringify(insertData));
+        }
+
+        var username = document.getElementById('username').value = '';
+        var fname = document.getElementById('fname').value = '';
+        var cnic = document.getElementById('cnic').value = '';
+        var phNumber = document.getElementById('phNumber').value = '';
+        var eMail = document.getElementById('eMail').value = '';
+    };
+
+    btn1.addEventListener('click', submitHandling);
+
+    var searchName = document.getElementById('searchBox');
+
+    var infoContainer = document.getElementsByClassName('infoContainer')[0];
+
+    const searchHandling = () => {
+
+        var searchName = document.getElementById('searchBox');
+
+        let filterArray = JSON.parse(localStorage.getItem('data'));
+
+        let valueUN = searchName.value;
+
+        var userFilter = filterArray.filter((uN) => {
+            if (uN.username == valueUN) {
+                return uN;
+            }
+        });
+
+        userFilter.map((obj) => {
+            var usernameHeading = document.createElement('h1');
+            usernameHeading.className = 'marginLeft fontSize';
+            usernameHeading.innerText = '-> Username: ' + obj.username;
+            infoContainer.appendChild(usernameHeading);
+
+            var fnameHeading = document.createElement('h1');
+            fnameHeading.className = 'marginLeft fontSize';
+            fnameHeading.innerText = ' Father Name: ' + obj.fname;
+            infoContainer.appendChild(fnameHeading);
+
+            var cnicHeading = document.createElement('h1');
+            cnicHeading.className = 'marginLeft fontSize';
+            cnicHeading.innerText = ' Cnic: ' + obj.cnic;
+            infoContainer.appendChild(cnicHeading);
+
+            var phHeading = document.createElement('h1');
+            phHeading.className = 'marginLeft fontSize';
+            phHeading.innerText = ' Ph. No.: ' + obj.phNumber;
+            infoContainer.appendChild(phHeading);
+
+            var emailHeading = document.createElement('h1');
+            emailHeading.className = 'marginLeft fontSize';
+            emailHeading.innerText = ' Email: ' + obj.eMail;
+            infoContainer.appendChild(emailHeading);
+        });
+    };
+
+    btn2.addEventListener('click', searchHandling);
+
+    function clrText() {
+        window.location.reload(this);
+    }
+
+</script>
+
+</html>
